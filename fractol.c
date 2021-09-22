@@ -1,27 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "./minilibx-linux/mlx.h"
-
-# define WIN_WIDTH 1000
-# define WIN_HEIGHT 1000
-
-# define IMG_WIDTH 1000
-# define IMG_HEIGHT 1000
-
-typedef struct	s_img
-{
-	void		*img_ptr;
-	int			*data;
-	int			size_l;
-	int			bpp;
-	int			endian;
-}				t_img;
-
-typedef struct	s_mlx
-{
-	void		*mlx_ptr;
-	void		*win;
-}				t_mlx;
+#include "fractol.h"
 
 int	main(void)
 {
