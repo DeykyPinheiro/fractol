@@ -41,6 +41,7 @@ fclean:			clean
 				$(MAKE) -C $(LIBFT_PATH) fclean
 				$(RM) $(NAME)
 				$(RM) a.out
+				$(RM) fractol
 
 re:				fclean all
 
