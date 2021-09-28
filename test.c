@@ -1,49 +1,62 @@
 #include "fractol.h"
 
-//struct para inicializar a mlx
-typedef struct mlx_var
+//numeros complexos
+typedef struct s_complex
+{
+	double	re;
+	double	im;
+}	t_complex;
+
+
+
+typedef struct s_mlx
 {
 	void	*init;
-	void	*window;
-	void	*image;
+	void	*win;
+	void	*img;
+	char	*data;
 	int		size_x;
 	int		size_y;
-}	mlx_var;
+}	t_mlx;
 
-//funcao setando valores padroes
-void	set_default_mlx(mlx_var *mlx)
+typedef struct s_color
+{
+	int		bits_per_pixel;
+	int		size_line;
+	int		endian;
+}	t_color;
+
+void	set_default_mlx(t_mlx *mlx)
 {
 	mlx->init = NULL;
-	mlx->window = NULL;
-	mlx->image = NULL;
-	mlx->size_x = 600;
-	mlx->size_y = 400;
+	mlx->win = NULL;
+	mlx->img = NULL;
+	mlx->data = NULL;
+	mlx->size_x = 400;
+	mlx->size_y = 300;
 }
 
-//funcao para imprimir tela
-void	screen(mlx_var *mlx)
+void screen(t_mlx *mlx, t_color *color)
 {
 	mlx->init = mlx_init();
-	mlx->window = mlx_new_window(mlx->init, mlx->size_x, mlx->size_y, "Window");
-	mlx->image = mlx_new_image(mlx->init, mlx->size_x, mlx->size_y);
+	mlx->win = mlx_new_window(mlx->init, mlx->size_x, mlx->size_y, "Window");
+	mlx->img = mlx_new_image(mlx->init, mlx->size_x, mlx->size_y);
+	mlx->data = mlx_get_data_addr(mlx->init, &color->bits_per_pixel, \
+	&color->size_line, &color->endian);
 	mlx_loop(mlx->init);
 }
 
-// // funcao que desenha fractol
-// void	fractol(mlx_var *mlx)
-// {
-// }
-// -[] criar funcao para computar a proporcao do pixel
-// -[] capturar a mouse event click
-// -[] aplicar zoom
-
-// main chamando todas as funcoes
-// obrigatorio separar espaco para a variavel
 int	main(void)
 {
-	mlx_var	*mlx;
+	t_mlx	*mlx;
+	t_color	*color;
+	t_complex *c;
 
-	mlx = (mlx_var *)malloc(sizeof(mlx_var) * 1);
+	c = (t_complex *)malloc(sizeof(t_complex) * 1);
+	mlx = (t_mlx *)malloc(sizeof(t_mlx) * 1);
+	color = (t_color *)malloc(sizeof(t_color) * 1);
+
+
 	set_default_mlx(mlx);
-	screen(mlx);
+	screen(mlx, color);
 }
