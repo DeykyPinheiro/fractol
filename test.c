@@ -159,6 +159,25 @@ t_mlx *mlx)
 	}
 }
 
+// struct para o mouse
+typedef struct s_mouse
+{
+	int	button;
+	int	offset_x;
+	int	ofset_y;
+}	t_mouse;
+
+// mouse function
+int mouse_event(int button, int x, int y, void *param)
+{
+	(void)param;
+	printf("=======================================\n");
+	printf("button		: %d\n", button);
+	printf("x		: %d\n", x);
+	printf("y		: %d\n", y);
+	return (1);
+}
+
 int	main(void)
 {
 	t_complex	*c;
@@ -166,16 +185,21 @@ int	main(void)
 	t_mlx		*mlx;
 	t_color		*color;
 	t_dimension	*limits;
+	t_mouse		*mouse;
 
 	limits = (t_dimension *)malloc(sizeof(t_dimension) * 1);
 	mlx = (t_mlx *)malloc(sizeof(t_mlx) * 1);
 	color = (t_color *)malloc(sizeof(t_color) * 1);
 	z = (t_complex *)malloc(sizeof(t_complex) * 1);
 	c = (t_complex *)malloc(sizeof(t_complex) * 1);
+	mouse = (t_mouse *)malloc(sizeof(t_mouse) * 1);
 	set_default_mlx(mlx);
 	set_default_dimension(limits);
 	screen(mlx, color);
 	fractal(c, z, 50, limits, mlx);
 	mlx_put_image_to_window(mlx->init, mlx->win, mlx->img, 0, 0);
+	mlx_mouse_hook(mlx->win, mouse_event, mouse);
 	mlx_loop(mlx->init);
 }
+
+
