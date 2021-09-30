@@ -48,9 +48,12 @@ typedef struct s_fractal
 	void		*img;
 	int			*data;
 	int			mouse_button;
-	int			offset_x;
-	int			offset_y;
+	int			mouse_x;
+	int			mouse_y;
+	double		offset_x;
+	double		offset_y;
 	int			max_iter;
+	double			scale;
 	t_complex	*z;
 	t_complex	*c;
 	t_dimension	*limits;
@@ -67,26 +70,30 @@ void	set_default_fractal(t_fractal *mlx)
 {
 	mlx->init = NULL;
 	mlx->win = NULL;
-	mlx->img =NULL;
+	mlx->img = NULL;
 	mlx->data = NULL;
 	mlx->mouse_button = 1;
-	mlx->offset_x = 0;
-	mlx->offset_y = 0;
+	mlx->mouse_x = 0;
+	mlx->mouse_y = 0;
 	mlx->max_iter = 50;
+	mlx->scale = 300;
+	mlx->offset_x = -2;
+	mlx->offset_y = -1;
 	mlx->z = (t_complex *)malloc(sizeof(t_complex) * 1);
 	mlx->c = (t_complex *)malloc(sizeof(t_complex) * 1);
 	mlx->limits = (t_dimension *)malloc(sizeof(t_dimension) * 1);
 }
 
-void	set_default_dimension(t_fractal *mlx)
-{
-	mlx->limits->MinRe = -2.0;
-	mlx->limits->MaxRe = 1.0;
-	mlx->limits->MinIm = -1.2;
-	mlx->limits->MaxIm = mlx->limits->MinIm + \
-	(mlx->limits->MaxRe - mlx->limits->MinRe) \
-	* IMG_HEIGHT / IMG_WIDTH;
-}
+//apagar pq não to usando
+// void	set_default_dimension(t_fractal *mlx)
+// {
+// 	mlx->limits->MinRe = -2.0;
+// 	mlx->limits->MaxRe = 1.0;
+// 	mlx->limits->MinIm = -1.2;
+// 	mlx->limits->MaxIm = mlx->limits->MinIm + \
+// 	(mlx->limits->MaxRe - mlx->limits->MinRe) \
+// 	* IMG_HEIGHT / IMG_WIDTH;
+// }
 
 void	screen(t_fractal *mlx, t_color *color)
 {
@@ -100,18 +107,13 @@ void	screen(t_fractal *mlx, t_color *color)
 // aponta para onde vai ficar a parte real na tela, converte em x na img
 double	map_to_re(int x, t_fractal *mlx)
 {
-	double	range;
-	range = mlx->limits->MaxRe - mlx->limits->MinRe;
-	return (x * (range / IMG_WIDTH) + mlx->limits->MinRe);
+	return (x / mlx->scale + mlx->offset_x);
 }
 
 // aponta onde fica a parte imaginaria, converte em y na img
 double	map_to_im(int y, t_fractal *mlx)
 {
-	double	range;
-	// printf("entrei no map_to_im\n");
-	range = mlx->limits->MaxIm - mlx->limits->MinIm;
-	return (y * (range / IMG_HEIGHT) + mlx->limits->MinIm);
+	return (y / mlx->scale + mlx->offset_y);
 }
 
 //mandelbrot
@@ -123,15 +125,19 @@ int	mandelbrot_set(t_fractal *mlx)
 	i = 0;
 	mlx->z->re = 0;
 	mlx->z->im = 0;
+	// printf("===========================\n");
 	while (complex_abs(mlx->z) < 4 && i < mlx->max_iter)
 	{
 		aux = pow(mlx->z->re, 2) - pow(mlx->z->im, 2) + mlx->c->re;
 		mlx->z->im = (2.0 * mlx->z->re * mlx->z->im) + mlx->c->im;
 		mlx->z->re = aux;
 		i++;
+		// printf("i : %d\n", i);
 	}
 
 	// printf("i: %i\n", i);
+	// printf("c re: %f\n", mlx->c->re);
+	// printf("c im: %f\n", mlx->c->im);
 	return (i);
 }
 
@@ -166,11 +172,16 @@ void	fractal(t_fractal *mlx)
 		x = -1;
 		while (++x < IMG_WIDTH)
 		{
+			// printf("x: %d\n", x);
+			// mlx->c->re = x / mlx->scale + mlx->offset_x;
 			mlx->c->re = map_to_re(x, mlx);
 			mlx->c->im = map_to_im(y, mlx);
+			// printf("c re: %f\n", mlx->c->re);
+			// printf("c im: %f\n", mlx->c->im);
 			color = mandelbrot_set(mlx);
 			set_color(x, y, mlx, color);
 		}
+
 	}
 	mlx_put_image_to_window(mlx->init, mlx->win, mlx->img, 0, 0);
 }
@@ -178,29 +189,18 @@ void	fractal(t_fractal *mlx)
 
 void	zoom(t_fractal *mlx, double z)
 {
-	double	aux;
-	// centraliza o ponto selecionado pelo mouse
-	mlx->c->re = mlx->limits->MinRe + (mlx->limits->MaxRe - mlx->limits->MinRe) * mlx->offset_x / IMG_WIDTH;
+	double	mouse_before_x;
+	double	mouse_before_y;
+	double	mouse_after_x;
+	double	mouse_after_y;
 
-	mlx->c->im = mlx->limits->MinIm + (mlx->limits->MaxIm - mlx->limits->MinIm) * mlx->offset_y / IMG_HEIGHT;
-
-	//zoom
-	aux = mlx->c->re - (mlx->limits->MaxRe - mlx->limits->MinRe) / 2 / z;
-	mlx->limits->MaxRe = mlx->c->re + (mlx->limits->MaxRe - mlx->limits->MinRe) / 2 / z;
-	mlx->limits->MinRe = aux;
-
-	aux = mlx->c->im - (mlx->limits->MaxIm - mlx->limits->MinIm) / 2 / z;
-	mlx->limits->MaxIm = mlx->c->im + (mlx->limits->MaxIm - mlx->limits->MinIm) / 2 / z;
-	mlx->limits->MinIm = aux;
-	// fractal(mlx);
-	printf("max re		: %f\n", mlx->limits->MaxRe);
-	printf("min re		: %f\n", mlx->limits->MinRe);
-	printf("max im		: %f\n", mlx->limits->MaxIm);
-	printf("min im		: %f\n", mlx->limits->MinIm);
-	printf("c re		: %f\n", mlx->c->re);
-	printf("c im		: %f\n", mlx->c->im);
-	printf("offset_x	: %d\n", mlx->offset_x);
-	printf("offset_y	: %d\n", mlx->offset_y);
+	mouse_before_x = (double)mlx->mouse_x / mlx->scale + mlx->offset_x;
+	mouse_before_y = (double)mlx->mouse_y / mlx->scale + mlx->offset_y;
+	mlx->scale *= z;
+	mouse_after_x = (double)mlx->mouse_x / mlx->scale + mlx->offset_x;
+	mouse_after_y = (double)mlx->mouse_y / mlx->scale + mlx->offset_y;
+	mlx->offset_x += mouse_before_x - mouse_after_x;
+	mlx->offset_y += mouse_before_y - mouse_after_y;
 	fractal(mlx);
 }
 
@@ -209,12 +209,12 @@ int mouse_event(int button, int x, int y, void *param)
 {
 	t_fractal *mlx = param;
 	mlx->mouse_button = button;
-	mlx->offset_x = x;
-	mlx->offset_y = y;
+	mlx->mouse_x = (double)x;
+	mlx->mouse_y = (double)y;
 	printf("=======================================\n");
 	printf("button		: %d\n", mlx->mouse_button);
-	printf("x		: %d\n", mlx->offset_x);
-	printf("y		: %d\n", mlx->offset_y);
+	printf("x		: %d\n", mlx->mouse_x);
+	printf("y		: %d\n", mlx->mouse_y);
 
 	if (button == 4)
 	{
@@ -239,7 +239,7 @@ int	main(void)
 	color = (t_color *)malloc(sizeof(t_color) * 1);
 
 	set_default_fractal(mlx);
-	set_default_dimension(mlx);
+	// set_default_dimension(mlx);
 	screen(mlx, color);
 	fractal(mlx);
 	mlx_mouse_hook(mlx->win, mouse_event, mlx);

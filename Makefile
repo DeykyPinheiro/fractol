@@ -45,8 +45,8 @@ fclean:			clean
 
 re:				fclean all
 
-run:
-				clang -Wall -Werror -Wextra *c ./libraries/minilibx/libmlx.a -L. -lXext -L. -lX11 && ./a.out
+r:
+				clang -Wall -Werror -Wextra test.c -O3 ./libraries/minilibx/libmlx.a -L. -lXext -L. -lX11 && ./a.out
 
 
 .PHONY:			all clean fclean re run
