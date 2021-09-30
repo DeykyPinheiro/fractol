@@ -185,16 +185,14 @@ void	zoom(t_fractal *mlx, double z)
 	mlx->c->im = mlx->limits->MinIm + (mlx->limits->MaxIm - mlx->limits->MinIm) * mlx->offset_y / IMG_HEIGHT;
 
 	//zoom
-	aux = mlx->c->re - (mlx->limits->MaxRe - mlx->limits->MinRe) / z;
-
-
-	mlx->limits->MaxRe = mlx->c->re + (mlx->limits->MaxRe - mlx->limits->MinRe) / z;
-
+	aux = mlx->c->re - (mlx->limits->MaxRe - mlx->limits->MinRe) / 2 / z;
+	mlx->limits->MaxRe = mlx->c->re + (mlx->limits->MaxRe - mlx->limits->MinRe) / 2 / z;
 	mlx->limits->MinRe = aux;
 
 	aux = mlx->c->im - (mlx->limits->MaxIm - mlx->limits->MinIm) / 2 / z;
 	mlx->limits->MaxIm = mlx->c->im + (mlx->limits->MaxIm - mlx->limits->MinIm) / 2 / z;
 	mlx->limits->MinIm = aux;
+	// fractal(mlx);
 	printf("max re		: %f\n", mlx->limits->MaxRe);
 	printf("min re		: %f\n", mlx->limits->MinRe);
 	printf("max im		: %f\n", mlx->limits->MaxIm);
