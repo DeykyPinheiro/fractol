@@ -41,7 +41,7 @@ typedef struct s_dimension
 	double	MaxIm;
 }	t_dimension;
 
-typedef struct s_mlx
+typedef struct s_fractal
 {
 	void	*init;
 	void	*win;
@@ -50,7 +50,10 @@ typedef struct s_mlx
 	int		mouse_button;
 	int		offset_x;
 	int		offset_y;
-}	t_mlx;
+	int		max_iter;
+	t_complex	*z;
+	t_complex	*c;
+}	t_fractal;
 
 typedef struct s_color
 {
@@ -59,24 +62,28 @@ typedef struct s_color
 	int		endian;
 }	t_color;
 
-void	set_default_mlx(t_mlx *mlx)
+void	set_default_fractal(t_fractal *mlx)
 {
 	mlx->init = NULL;
 	mlx->win = NULL;
-	mlx->img = NULL;
+	mlx->img =NULL;
 	mlx->data = NULL;
+	mlx->mouse_button = 1;
+	mlx->offset_x = 1;
+	mlx->offset_y = 1;
+	mlx->max_iter = 50;
 }
 
 void	set_default_dimension(t_dimension *limits)
 {
 	limits->MinRe = -2.0;
 	limits->MaxRe = 1.0;
-	limits->MinIm = - 1.2;
+	limits->MinIm = -1.2;
 	limits->MaxIm = limits->MinIm + (limits->MaxRe - limits->MinRe) \
 	* IMG_HEIGHT / IMG_WIDTH;
 }
 
-void	screen(t_mlx *mlx, t_color *color)
+void	screen(t_fractal *mlx, t_color *color)
 {
 	mlx->init = mlx_init();
 	mlx->win = mlx_new_window(mlx->init, WIN_WIDTH, WIN_HEIGHT, "Window");
@@ -89,7 +96,6 @@ void	screen(t_mlx *mlx, t_color *color)
 double	map_to_re(int x, t_dimension *limits)
 {
 	double	range;
-
 	range = limits->MaxRe - limits->MinRe;
 	return (x * (range / IMG_WIDTH) + limits->MinRe);
 }
@@ -98,33 +104,34 @@ double	map_to_re(int x, t_dimension *limits)
 double	map_to_im(int y, t_dimension *limits)
 {
 	double	range;
-
+	// printf("entrei no map_to_im\n");
 	range = limits->MaxIm - limits->MinIm;
 	return (y * (range / IMG_HEIGHT) + limits->MinIm);
 }
 
 //mandelbrot
-int	mandelbrot_set(t_complex *c, t_complex *z, int max_iter)
+int	mandelbrot_set(t_fractal *mlx)
 {
 	int		i;
 	double	aux;
 
 	i = 0;
-	z->re = 0;
-	z->im = 0;
-	while (complex_abs(z) < 4 && i < max_iter)
+	mlx->z->re = 0;
+	mlx->z->im = 0;
+	while (complex_abs(mlx->z) < 4 && i < mlx->max_iter)
 	{
-		aux = pow(z->re, 2) - pow(z->im, 2) + c->re;
-		z->im = (2.0 * z->re * z->im) + c->im;
-		z->re = aux;
+		aux = pow(mlx->z->re, 2) - pow(mlx->z->im, 2) + mlx->c->re;
+		mlx->z->im = (2.0 * mlx->z->re * mlx->z->im) + mlx->c->im;
+		mlx->z->re = aux;
 		i++;
 	}
+	// printf("i: %i\n", i);
 	return (i);
 }
 
-void	set_color(int x, int y, t_mlx *mlx, int color, int max_iter)
+void	set_color(int x, int y, t_fractal *mlx, int color)
 {
-	if (color < max_iter)
+	if (color < mlx->max_iter)
 	{
 		// // printf("===========================\n");
 		// printf("color: %d\n", color);
@@ -141,8 +148,7 @@ void	set_color(int x, int y, t_mlx *mlx, int color, int max_iter)
 	}
 }
 
-void	fractal(t_complex *c, t_complex *z, int max_iter, t_dimension *limits, \
-t_mlx *mlx)
+void	fractal(t_fractal *mlx, t_dimension *limits)
 {
 	int		x;
 	int		y;
@@ -154,10 +160,13 @@ t_mlx *mlx)
 		x = -1;
 		while (++x < IMG_WIDTH)
 		{
-			c->re = map_to_re(x, limits);
-			c->im = map_to_im(y, limits);
-			color = mandelbrot_set(c, z, 50);
-			set_color(x, y, mlx, color, max_iter);
+			// printf("x: %d\n", x);
+			// printf("y: %d\n", y);
+			mlx->c->re = map_to_re(x, limits);
+			mlx->c->im = map_to_im(y, limits);
+			// printf("eu sai\n");
+			color = mandelbrot_set(mlx);
+			set_color(x, y, mlx, color);
 		}
 	}
 }
@@ -165,7 +174,7 @@ t_mlx *mlx)
 // mouse function
 int mouse_event(int button, int x, int y, void *param)
 {
-	t_mlx *mlx = param;
+	t_fractal *mlx = param;
 	mlx->mouse_button = button;
 	mlx->offset_x = x;
 	mlx->offset_y = y;
@@ -179,7 +188,7 @@ int mouse_event(int button, int x, int y, void *param)
 }
 
 
-void	zoom(t_mlx *mlx, t_complex *c, t_dimension *limits, double z)
+void	zoom(t_fractal *mlx, t_complex *c, t_dimension *limits, double z)
 {
 	double	aux;
 
@@ -199,21 +208,21 @@ void	zoom(t_mlx *mlx, t_complex *c, t_dimension *limits, double z)
 
 int	main(void)
 {
-	t_complex	*c;
-	t_complex	*z;
-	t_mlx		*mlx;
+	t_fractal		*mlx;
 	t_color		*color;
 	t_dimension	*limits;
 
+
 	limits = (t_dimension *)malloc(sizeof(t_dimension) * 1);
-	mlx = (t_mlx *)malloc(sizeof(t_mlx) * 1);
+	mlx = (t_fractal *)malloc(sizeof(t_fractal) * 1);
+	mlx->z = (t_complex *)malloc(sizeof(t_complex) * 1);
+	mlx->c = (t_complex *)malloc(sizeof(t_complex) * 1);
 	color = (t_color *)malloc(sizeof(t_color) * 1);
-	z = (t_complex *)malloc(sizeof(t_complex) * 1);
-	c = (t_complex *)malloc(sizeof(t_complex) * 1);
-	set_default_mlx(mlx);
+
+	set_default_fractal(mlx);
 	set_default_dimension(limits);
 	screen(mlx, color);
-	fractal(c, z, 50, limits, mlx);
+	fractal(mlx, limits);
 	mlx_put_image_to_window(mlx->init, mlx->win, mlx->img, 0, 0);
 	mlx_mouse_hook(mlx->win, mouse_event, mlx);
 
