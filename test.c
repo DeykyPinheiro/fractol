@@ -168,12 +168,33 @@ int mouse_event(int button, int x, int y, void *param)
 	t_mlx *mlx = param;
 	mlx->mouse_button = button;
 	mlx->offset_x = x;
-	mlx->offset_y= y;
+	mlx->offset_y = y;
+	// if (button == 4)
+	// 	zoom(mlx, c, );
 	printf("=======================================\n");
 	printf("button		: %d\n", mlx->mouse_button);
 	printf("x		: %d\n", mlx->offset_x);
 	printf("y		: %d\n", mlx->offset_y);
 	return (1);
+}
+
+
+void	zoom(t_mlx *mlx, t_complex *c, t_dimension *limits, double z)
+{
+	double	aux;
+
+	// centraliza o ponto selecionado pelo mouse
+	c->re = limits->MinRe + (limits->MaxRe - limits->MinRe) * mlx->offset_x / IMG_WIDTH;
+	c->im = limits->MinIm + (limits->MaxIm - limits->MinIm) * mlx->offset_y / IMG_HEIGHT;
+
+	//zoom
+	aux = c->re + (limits->MaxRe - limits->MinRe) / 2 / z;
+	limits->MaxRe = c->re + (limits->MaxRe - limits->MinRe) / 2 / z;
+	limits->MinRe = aux;
+
+	aux = c->im - (limits->MaxIm - limits->MinIm) / 2 / z;
+	limits->MinIm = c->im + (limits->MaxIm - limits->MinIm) / 2 / z;
+	limits->MinIm = aux;
 }
 
 int	main(void)
