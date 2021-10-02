@@ -1,11 +1,11 @@
 #include "fractol.h"
 
-# define IMG_WIDTH 800
-# define WIN_WIDTH 800
+# define IMG_WIDTH 600
+# define WIN_WIDTH 600
 
 // # define WIN_WIDTH 800
-# define WIN_HEIGHT 600
-# define IMG_HEIGHT 600
+# define WIN_HEIGHT 500
+# define IMG_HEIGHT 500
 
 // # define IMG_WIDTH 800
 
@@ -56,10 +56,40 @@ typedef struct s_fractal
 	double		offset_y;
 	int			max_iter;
 	double			scale;
+	unsigned int	color[500];
+	int			r;
+	int			g;
+	int			b;
 	t_complex	*z;
 	t_complex	*c;
 	t_dimension	*limits;
 }	t_fractal;
+
+void	generate_color(t_fractal *mlx)
+{
+	int		iter;
+	float	factor;
+	float	diff;
+
+	iter = 0;
+	factor = 0;
+	while (iter < mlx->max_iter)
+	{
+		factor = (float)iter / mlx->max_iter;
+		if (iter < mlx->max_iter / 2)
+			mlx->color[iter] = 255 * iter / mlx->max_iter;
+		else
+		{
+			diff = 1. - factor;
+			mlx->r = 9 * diff * (factor * factor * factor) * 255;
+			mlx->g = 15 * (diff * diff) * (factor * factor) * 255;
+			mlx->b = 8.5 * (diff * diff * diff) * factor * 255;
+			mlx->color[iter] = (mlx->r & 0xff) \
+			<< 16 |(mlx->g & 0xff) << 8 | (mlx->b & 0xff);
+		}
+		iter++;
+	}
+}
 
 typedef struct s_color
 {
@@ -77,7 +107,7 @@ void	set_default_fractal(t_fractal *mlx)
 	mlx->mouse_button = 1;
 	mlx->mouse_x = 0;
 	mlx->mouse_y = 0;
-	mlx->max_iter = 50;
+	mlx->max_iter = 500;
 	mlx->scale = ((IMG_HEIGHT / 2) + (IMG_WIDTH / 2)) / 4;
 	mlx->offset_x = IMG_WIDTH / 2 / mlx->scale * -1;
 	mlx->offset_y = IMG_HEIGHT / 2 / mlx->scale * -1;
@@ -86,6 +116,7 @@ void	set_default_fractal(t_fractal *mlx)
 	mlx->z = (t_complex *)malloc(sizeof(t_complex) * 1);
 	mlx->c = (t_complex *)malloc(sizeof(t_complex) * 1);
 	mlx->limits = (t_dimension *)malloc(sizeof(t_dimension) * 1);
+	generate_color(mlx);
 }
 
 //apagar pq não to usando
@@ -151,21 +182,22 @@ int	mandelbrot_set(t_fractal *mlx)
 
 void	set_color(int x, int y, t_fractal *mlx, int color)
 {
-	if (color < mlx->max_iter)
-	{
-		// // printf("===========================\n");
-		// printf("color: %d\n", color);
-		// printf("fora\n");
-		// printf("===========================\n");
-		mlx->data[y * IMG_WIDTH + x] = 0x687178;
-	}
-	else
-	{
-		// printf("color: %d\n", color);
-		// printf("dentro\n");
-		// printf("===========================\n");
-		mlx->data[y * IMG_WIDTH + x] = 0x33D4FF;
-	}
+		mlx->data[y * IMG_WIDTH + x] = mlx->color[color];
+	// if (color < mlx->max_iter)
+	// {
+	// 	// // printf("===========================\n");
+	// 	// printf("color: %d\n", color);
+	// 	// printf("fora\n");
+	// 	// printf("===========================\n");
+	// 	mlx->data[y * IMG_WIDTH + x] = 0x687178;
+	// }
+	// else
+	// {
+	// 	// printf("color: %d\n", color);
+	// 	// printf("dentro\n");
+	// 	// printf("===========================\n");
+	// 	mlx->data[y * IMG_WIDTH + x] = 0x33D4FF;
+	// }
 }
 
 void	fractal(t_fractal *mlx)
@@ -182,10 +214,10 @@ void	fractal(t_fractal *mlx)
 		{
 			// printf("x: %d\n", x);
 			// mlx->c->re = x / mlx->scale + mlx->offset_x;
-			mlx->c->re = map_to_re(x, mlx);
-			mlx->c->im = map_to_im(y, mlx);
-			mlx->z->re = 0;
-			mlx->z->im = 0;
+			mlx->z->re = map_to_re(x, mlx);
+			mlx->z->im = map_to_im(y, mlx);
+			mlx->c->re = -0.8;
+			mlx->c->im = 0.156;
 			// printf("c re: %f\n", mlx->c->re);
 			// printf("c im: %f\n", mlx->c->im);
 			color = mandelbrot_set(mlx);
@@ -221,23 +253,23 @@ int mouse_event(int button, int x, int y, void *param)
 	mlx->mouse_button = button;
 	mlx->mouse_x = (double)x;
 	mlx->mouse_y = (double)y;
-	printf("=======================================\n");
-	printf("button		: %d\n", mlx->mouse_button);
-	printf("x		: %d\n", mlx->mouse_x);
-	printf("y		: %d\n", mlx->mouse_y);
-	printf("scale		: %f\n", mlx->scale);
-	printf("offset x	: %f\n", mlx->offset_x);
-	printf("offset y	: %f\n", mlx->offset_y);
+	// printf("=======================================\n");
+	// printf("button		: %d\n", mlx->mouse_button);
+	// printf("x		: %d\n", mlx->mouse_x);
+	// printf("y		: %d\n", mlx->mouse_y);
+	// printf("scale		: %f\n", mlx->scale);
+	// printf("offset x	: %f\n", mlx->offset_x);
+	// printf("offset y	: %f\n", mlx->offset_y);
 
 	if (button == 4)
 	{
 		zoom(mlx, 1.1);
-		printf("zoom in\n");
+		// printf("zoom in\n");
 	}
 	else if(button == 5)
 	{
 		zoom(mlx, 0.9);
-		printf("zoom out\n");
+		// printf("zoom out\n");
 
 	}
 	return (1);
@@ -252,7 +284,7 @@ int	main(void)
 	color = (t_color *)malloc(sizeof(t_color) * 1);
 
 	set_default_fractal(mlx);
-	printf("setei o padrao\n");
+	// printf("setei o padrao\n");
 	// set_default_dimension(mlx);
 	screen(mlx, color);
 	fractal(mlx);
