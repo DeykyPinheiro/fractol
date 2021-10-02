@@ -266,7 +266,7 @@ int	key_event(int button, void *param)
 		exit(1);
 	}
 	printf("=======================================\n");
-	printf("moude button	: %d\n", mlx->mouse_button);
+	printf("keyborad key	: %d\n", button);
 	printf("x		: %d\n", mlx->mouse_x);
 	printf("y		: %d\n", mlx->mouse_y);
 	printf("scale		: %f\n", mlx->scale);
@@ -304,10 +304,14 @@ int mouse_event(int button, int x, int y, void *param)
 	return (1);
 }
 
-int	main(void)
+int	main(int argc,char **argv)
 {
 	t_fractal		*mlx;
 	t_color		*color;
+
+	printf("argv[0]: %s\n", argv[0]);
+	printf("argv[1]: %s\n", argv[1]);
+	printf("argv[2]: %s\n", argv[argc ]);
 
 	mlx = (t_fractal *)malloc(sizeof(t_fractal) * 1);
 	color = (t_color *)malloc(sizeof(t_color) * 1);
