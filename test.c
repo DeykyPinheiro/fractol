@@ -52,11 +52,12 @@ typedef struct s_fractal
 	int			mouse_button;
 	int			mouse_x;
 	int			mouse_y;
+	int			keyboard;
 	double		offset_x;
 	double		offset_y;
 	int			max_iter;
 	double			scale;
-	unsigned int	color[500];
+	unsigned int	color[255];
 	int			r;
 	int			g;
 	int			b;
@@ -105,9 +106,9 @@ void	set_default_fractal(t_fractal *mlx)
 	mlx->img = NULL;
 	mlx->data = NULL;
 	mlx->mouse_button = 1;
-	mlx->mouse_x = 0;
-	mlx->mouse_y = 0;
-	mlx->max_iter = 500;
+	mlx->mouse_x = IMG_WIDTH / 2;
+	mlx->mouse_y = IMG_HEIGHT / 2;
+	mlx->max_iter = 255;
 	mlx->scale = ((IMG_HEIGHT / 2) + (IMG_WIDTH / 2)) / 4;
 	mlx->offset_x = IMG_WIDTH / 2 / mlx->scale * -1;
 	mlx->offset_y = IMG_HEIGHT / 2 / mlx->scale * -1;
@@ -245,7 +246,35 @@ void	zoom(t_fractal *mlx, double z)
 	mlx->offset_y += mouse_before_y - mouse_after_y;
 	fractal(mlx);
 }
+int	key_event(int button, void *param)
+{
+	t_fractal *mlx = param;
 
+	mlx->keyboard = button;
+	if (button == 107)
+	{
+		zoom(mlx, 1.1);
+		// printf("zoom in\n");
+	}
+	else if(button == 108)
+	{
+		zoom(mlx, 0.9);
+		// printf("zoom out\n");
+	}
+	else if(button == 65307)
+	{
+		exit(1);
+	}
+	printf("=======================================\n");
+	printf("moude button	: %d\n", mlx->mouse_button);
+	printf("x		: %d\n", mlx->mouse_x);
+	printf("y		: %d\n", mlx->mouse_y);
+	printf("scale		: %f\n", mlx->scale);
+	printf("offset x	: %f\n", mlx->offset_x);
+	printf("offset y	: %f\n", mlx->offset_y);
+
+	return (1);
+}
 // mouse function
 int mouse_event(int button, int x, int y, void *param)
 {
@@ -253,13 +282,13 @@ int mouse_event(int button, int x, int y, void *param)
 	mlx->mouse_button = button;
 	mlx->mouse_x = (double)x;
 	mlx->mouse_y = (double)y;
-	// printf("=======================================\n");
-	// printf("button		: %d\n", mlx->mouse_button);
-	// printf("x		: %d\n", mlx->mouse_x);
-	// printf("y		: %d\n", mlx->mouse_y);
-	// printf("scale		: %f\n", mlx->scale);
-	// printf("offset x	: %f\n", mlx->offset_x);
-	// printf("offset y	: %f\n", mlx->offset_y);
+	printf("=======================================\n");
+	printf("mouse button	: %d\n", mlx->mouse_button);
+	printf("x		: %d\n", mlx->mouse_x);
+	printf("y		: %d\n", mlx->mouse_y);
+	printf("scale		: %f\n", mlx->scale);
+	printf("offset x	: %f\n", mlx->offset_x);
+	printf("offset y	: %f\n", mlx->offset_y);
 
 	if (button == 4)
 	{
@@ -291,6 +320,7 @@ int	main(void)
 	printf("scale		: %f\n", mlx->scale);
 	printf("offset x	: %f\n", mlx->offset_x);
 	printf("offset y	: %f\n", mlx->offset_y);
+	mlx_key_hook(mlx->win, &key_event, mlx);
 	mlx_mouse_hook(mlx->win, mouse_event, mlx);
 	mlx_loop(mlx->init);
 }
