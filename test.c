@@ -1,11 +1,13 @@
 #include "fractol.h"
 
+# define IMG_WIDTH 800
+# define WIN_WIDTH 800
 
-# define WIN_WIDTH 400
-# define WIN_HEIGHT 300
+// # define WIN_WIDTH 800
+# define WIN_HEIGHT 600
+# define IMG_HEIGHT 600
 
-# define IMG_WIDTH 400
-# define IMG_HEIGHT 300
+// # define IMG_WIDTH 800
 
 typedef struct s_complex
 {
@@ -76,9 +78,11 @@ void	set_default_fractal(t_fractal *mlx)
 	mlx->mouse_x = 0;
 	mlx->mouse_y = 0;
 	mlx->max_iter = 50;
-	mlx->scale = 300;
-	mlx->offset_x = -2;
-	mlx->offset_y = -1;
+	mlx->scale = ((IMG_HEIGHT / 2) + (IMG_WIDTH / 2)) / 4;
+	mlx->offset_x = IMG_WIDTH / 2 / mlx->scale * -1;
+	mlx->offset_y = IMG_HEIGHT / 2 / mlx->scale * -1;
+	// mlx->z->re = 0;
+	// mlx->z->im = 0;
 	mlx->z = (t_complex *)malloc(sizeof(t_complex) * 1);
 	mlx->c = (t_complex *)malloc(sizeof(t_complex) * 1);
 	mlx->limits = (t_dimension *)malloc(sizeof(t_dimension) * 1);
@@ -121,11 +125,12 @@ int	mandelbrot_set(t_fractal *mlx)
 {
 	int		i;
 	double	aux;
+	// printf("before z re: %f\n", mlx->z->re);
+	// printf("before z im: %f\n", mlx->z->im);
 
 	i = 0;
-	mlx->z->re = 0;
-	mlx->z->im = 0;
-	// printf("===========================\n");
+	// mlx->c->re  = -0.70176;
+	// mlx->c->im = -0.3842;
 	while (complex_abs(mlx->z) < 4 && i < mlx->max_iter)
 	{
 		aux = pow(mlx->z->re, 2) - pow(mlx->z->im, 2) + mlx->c->re;
@@ -134,8 +139,11 @@ int	mandelbrot_set(t_fractal *mlx)
 		i++;
 		// printf("i : %d\n", i);
 	}
+	// printf("after z re: %f\n", mlx->z->re);
+	// printf("after z im: %f\n", mlx->z->im);
+	// printf("===========================\n");
 
-	// printf("i: %i\n", i);
+	// printf("i: %i\n", i);s
 	// printf("c re: %f\n", mlx->c->re);
 	// printf("c im: %f\n", mlx->c->im);
 	return (i);
@@ -176,6 +184,8 @@ void	fractal(t_fractal *mlx)
 			// mlx->c->re = x / mlx->scale + mlx->offset_x;
 			mlx->c->re = map_to_re(x, mlx);
 			mlx->c->im = map_to_im(y, mlx);
+			mlx->z->re = 0;
+			mlx->z->im = 0;
 			// printf("c re: %f\n", mlx->c->re);
 			// printf("c im: %f\n", mlx->c->im);
 			color = mandelbrot_set(mlx);
@@ -215,6 +225,9 @@ int mouse_event(int button, int x, int y, void *param)
 	printf("button		: %d\n", mlx->mouse_button);
 	printf("x		: %d\n", mlx->mouse_x);
 	printf("y		: %d\n", mlx->mouse_y);
+	printf("scale		: %f\n", mlx->scale);
+	printf("offset x	: %f\n", mlx->offset_x);
+	printf("offset y	: %f\n", mlx->offset_y);
 
 	if (button == 4)
 	{
@@ -239,9 +252,13 @@ int	main(void)
 	color = (t_color *)malloc(sizeof(t_color) * 1);
 
 	set_default_fractal(mlx);
+	printf("setei o padrao\n");
 	// set_default_dimension(mlx);
 	screen(mlx, color);
 	fractal(mlx);
+	printf("scale		: %f\n", mlx->scale);
+	printf("offset x	: %f\n", mlx->offset_x);
+	printf("offset y	: %f\n", mlx->offset_y);
 	mlx_mouse_hook(mlx->win, mouse_event, mlx);
 	mlx_loop(mlx->init);
 }
