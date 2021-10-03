@@ -259,9 +259,11 @@ int	key_event(int button, void *param)
 	mlx->keyboard = button;
 	if (button == 105)
 	{
-	mlx->scale = ((IMG_HEIGHT / 2) + (IMG_WIDTH / 2)) / 4;
-	mlx->offset_x = IMG_WIDTH / 2 / mlx->scale * -1;
-	mlx->offset_y = IMG_HEIGHT / 2 / mlx->scale * -1;
+		mlx->mouse_x = IMG_WIDTH / 2;
+		mlx->mouse_y = IMG_HEIGHT / 2;
+		mlx->scale = ((IMG_HEIGHT / 2) + (IMG_WIDTH / 2)) / 4;
+		mlx->offset_x = IMG_WIDTH / 2 / mlx->scale * -1;
+		mlx->offset_y = IMG_HEIGHT / 2 / mlx->scale * -1;
 	fractal(mlx);
 	}
 	else if (button == 107)
