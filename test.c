@@ -343,32 +343,6 @@ int mouse_event(int button, int x, int y, void *param)
 	return (1);
 }
 
-int	main(int argc,char **argv)
-{
-	t_fractal		*mlx;
-	t_color		*color;
-
-	printf("argv[0]: %s\n", argv[0]);
-	printf("argv[1]: %s\n", argv[1]);
-	printf("argv[2]: %s\n", argv[argc ]);
-
-	mlx = (t_fractal *)malloc(sizeof(t_fractal) * 1);
-	color = (t_color *)malloc(sizeof(t_color) * 1);
-
-	set_default_fractal(mlx);
-	// printf("setei o padrao\n");
-	// set_default_dimension(mlx);
-	screen(mlx, color);
-	fractal(mlx);
-	printf("scale		: %f\n", mlx->scale);
-	printf("offset x	: %f\n", mlx->offset_x);
-	printf("offset y	: %f\n", mlx->offset_y);
-	mlx_key_hook(mlx->win, &key_event, mlx);
-	mlx_mouse_hook(mlx->win, mouse_event, mlx);
-	mlx_loop(mlx->init);
-}
-
-
 int	reverse_point_position(const char *str)
 {
 	int	i;
@@ -421,3 +395,27 @@ double	ft_atod(const char *nptr)
 	return (signal * (number / pow(10, pot)));
 }
 
+int	main(int argc,char **argv)
+{
+	t_fractal		*mlx;
+	t_color		*color;
+
+	printf("argv[0]: %s\n", argv[0]);
+	printf("argv[1]: %s\n", argv[1]);
+	printf("argv[2]: %s\n", argv[argc ]);
+
+	mlx = (t_fractal *)malloc(sizeof(t_fractal) * 1);
+	color = (t_color *)malloc(sizeof(t_color) * 1);
+
+	set_default_fractal(mlx);
+	// printf("setei o padrao\n");
+	// set_default_dimension(mlx);
+	screen(mlx, color);
+	fractal(mlx);
+	printf("scale		: %f\n", mlx->scale);
+	printf("offset x	: %f\n", mlx->offset_x);
+	printf("offset y	: %f\n", mlx->offset_y);
+	mlx_key_hook(mlx->win, &key_event, mlx);
+	mlx_mouse_hook(mlx->win, mouse_event, mlx);
+	mlx_loop(mlx->init);
+}
