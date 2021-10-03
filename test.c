@@ -279,25 +279,25 @@ int	key_event(int button, void *param)
 	// up 119 65362
 	else if (button == 119 || button == 65362)
 	{
-		mlx->offset_y += (ft_abs(mlx->offset_y) * 0.0025 * -1);
+		mlx->offset_y += (ft_abs(mlx->offset_y / mlx->scale) * -1);
 		fractal(mlx);
 	}
 	// down 115 65364
 	else if (button == 115 || button == 65364)
 	{
-		mlx->offset_y -= (ft_abs(mlx->offset_y) * 0.0025 * -1);
+		mlx->offset_y -= (ft_abs(mlx->offset_y / mlx->scale) * -1);
 		fractal(mlx);
 	}
 	// left 97 65361
 	else if (button == 97 || button == 65361)
 	{
-		mlx->offset_x += (ft_abs(mlx->offset_x) * 0.0025 * -1);
+		mlx->offset_x += (ft_abs(mlx->offset_x / mlx->scale) * -1);
 		fractal(mlx);
 	}
 	// right 100 65363
 	else if (button == 100 || button == 65363)
 	{
-		mlx->offset_x -= (ft_abs(mlx->offset_x) * 0.0025 * -1);
+		mlx->offset_x -= (ft_abs(mlx->offset_x / mlx->scale) * -1);
 		fractal(mlx);
 	}
 	else if(button == 65307)
