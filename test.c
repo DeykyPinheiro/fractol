@@ -406,13 +406,14 @@ double	ft_atod(const char *nptr)
 			signal = -1;
 		i++;
 	}
-	while (ft_isdigit(nptr[i]) || nptr[i] == '.')
+	while (ft_isdigit(nptr[i]) || nptr[i] == '.' || nptr[i] == ',' )
 	{
 		if (nptr[i] == '.')
-		{
-			printf("%li\n", i);
-			printf("virgula\n");
 			i++;
+		else if (nptr[i] == ',')
+		{
+			write(1, "Error: comma in string\n", 23);
+			return (0);
 		}
 		number = (nptr[i] - 48) + (number * 10);
 		i++;

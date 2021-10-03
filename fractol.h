@@ -3,7 +3,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "./libraries/minilibx/mlx.h"
+#include "./libraries/libft/libft.h"
 
 // # define WIN_WIDTH 1000
 // # define WIN_HEIGHT 1000
