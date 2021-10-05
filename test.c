@@ -51,6 +51,7 @@ typedef struct s_dimension
 
 typedef struct s_fractal
 {
+	char		*set;
 	void		*init;
 	void		*win;
 	void		*img;
@@ -216,21 +217,35 @@ void	fractal(t_fractal *mlx)
 	y = -1;
 	while (++y < IMG_HEIGHT)
 	{
+		// printf("y: %i\n", y);
+		// printf("z im: %f\n", mlx->z->im);
+		// printf("==========================\n");
 		x = -1;
 		while (++x < IMG_WIDTH)
 		{
 			// printf("x: %d\n", x);
 			// mlx->c->re = x / mlx->scale + mlx->offset_x;
-			mlx->z->re = map_to_re(x, mlx);
-			mlx->z->im = map_to_im(y, mlx);
-			mlx->c->re = -0.8;
-			mlx->c->im = 0.156;
+			// 	printf("dentro y: %i\n", y);
+			// printf("dentroz im: %f\n", mlx->z->im);
+			// 	mlx->z->im = map_to_im(y, mlx);
 			// printf("c re: %f\n", mlx->c->re);
-			// printf("c im: %f\n", mlx->c->im);
+			if (mlx->set[0] == 'j')
+			{
+				mlx->z->im = map_to_im(y, mlx);
+				mlx->z->re = map_to_re(x, mlx);
+				mlx->c->re = -0.80;
+				mlx->c->im =  0.156;
+			}
+			else if (mlx->set[0] == 'm')
+			{
+				mlx->c->im = map_to_im(y, mlx);
+				mlx->c->re = map_to_re(x, mlx);
+				mlx->z->re = 0;
+				mlx->z->im = 0;
+			}
 			color = mandelbrot_set(mlx);
 			set_color(x, y, mlx, color);
 		}
-
 	}
 	mlx_put_image_to_window(mlx->init, mlx->win, mlx->img, 0, 0);
 }
@@ -395,19 +410,53 @@ double	ft_atod(const char *nptr)
 	return (signal * (number / pow(10, pot)));
 }
 
-int	main(int argc,char **argv)
+void	set_fractol(t_fractal *mlx, char **argv)
 {
+	printf("chamei a funcao\n");
+	// printf("aqui tem o: %d\n", argv[1][0] == 'j');
+	if (argv[1][0]== 'j' || argv[1][0]== 'J')
+	{
+		mlx->set = "j";
+		printf("entrei no julia\n");
+	}
+	else if (argv[1][0] == 'm' || argv[1][0] == 'M')
+	{
+		mlx->set = "m";
+		printf("entrei no mandelbrot\n");
+	}
+	else if (argv[1][0] == 'b' || argv[1][0] == 'B')
+	{
+		mlx->set = "b";
+		printf("entrei no burn\n");
+
+	}
+}
+
+int	main(int argc, char **argv)
+{
+	(void)argc;
 	t_fractal		*mlx;
 	t_color		*color;
 
+	mlx = (t_fractal *)malloc(sizeof(t_fractal) * 1);
+	set_default_fractal(mlx);
+	set_fractol(mlx, argv);
+
+
+	printf("argc: %i\n",argc);
 	printf("argv[0]: %s\n", argv[0]);
 	printf("argv[1]: %s\n", argv[1]);
-	printf("argv[2]: %s\n", argv[argc ]);
+	printf("argv[2]: %s\n", argv[2]);
+	printf("argv[3]: %s\n", argv[3]);
+	printf("argv[4]: %s\n", argv[4]);
+	printf("set selection: %s\n", mlx->set);
+	printf("\n");
 
-	mlx = (t_fractal *)malloc(sizeof(t_fractal) * 1);
+
+
+
 	color = (t_color *)malloc(sizeof(t_color) * 1);
 
-	set_default_fractal(mlx);
 	// printf("setei o padrao\n");
 	// set_default_dimension(mlx);
 	screen(mlx, color);
@@ -419,3 +468,4 @@ int	main(int argc,char **argv)
 	mlx_mouse_hook(mlx->win, mouse_event, mlx);
 	mlx_loop(mlx->init);
 }
+
