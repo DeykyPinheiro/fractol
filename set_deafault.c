@@ -13,8 +13,6 @@ void	set_default_fractal(t_fractal *mlx)
 	mlx->scale = ((IMG_HEIGHT / 2) + (IMG_WIDTH / 2)) / 4;
 	mlx->offset_x = IMG_WIDTH / 2 / mlx->scale * -1;
 	mlx->offset_y = IMG_HEIGHT / 2 / mlx->scale * -1;
-	// mlx->z->re = 0;
-	// mlx->z->im = 0;
 	mlx->z = (t_complex *)malloc(sizeof(t_complex) * 1);
 	mlx->c = (t_complex *)malloc(sizeof(t_complex) * 1);
 	generate_color(mlx);

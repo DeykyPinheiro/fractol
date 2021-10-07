@@ -1,9 +1,11 @@
 #include "fractol.h"
 
 // mouse function
-int mouse_event(int button, int x, int y, void *param)
+int	mouse_event(int button, int x, int y, void *param)
 {
-	t_fractal *mlx = param;
+	t_fractal	*mlx;
+
+	mlx = param;
 	mlx->mouse_button = button;
 	mlx->mouse_x = (double)x;
 	mlx->mouse_y = (double)y;
@@ -14,25 +16,22 @@ int mouse_event(int button, int x, int y, void *param)
 	printf("scale		: %f\n", mlx->scale);
 	printf("offset x	: %f\n", mlx->offset_x);
 	printf("offset y	: %f\n", mlx->offset_y);
-
 	if (button == 4)
 	{
 		zoom(mlx, 1.1);
-		// printf("zoom in\n");
 	}
-	else if(button == 5)
+	else if (button == 5)
 	{
 		zoom(mlx, 0.9);
-		// printf("zoom out\n");
-
 	}
 	return (1);
 }
 
 int	key_event(int button, void *param)
 {
-	t_fractal *mlx = param;
+	t_fractal	*mlx;
 
+	mlx = param;
 	mlx->keyboard = button;
 	if (button == 105)
 	{
@@ -46,38 +45,32 @@ int	key_event(int button, void *param)
 	else if (button == 107)
 	{
 		zoom(mlx, 1.1);
-		// printf("zoom in\n");
 	}
-	else if(button == 108)
+	else if (button == 108)
 	{
 		zoom(mlx, 0.9);
-		// printf("zoom out\n");
 	}
-	// up 119 65362
 	else if (button == 119 || button == 65362)
 	{
 		mlx->offset_y += (ft_abs(mlx->offset_y / mlx->scale) * -1);
 		fractal(mlx);
 	}
-	// down 115 65364
 	else if (button == 115 || button == 65364)
 	{
 		mlx->offset_y -= (ft_abs(mlx->offset_y / mlx->scale) * -1);
 		fractal(mlx);
 	}
-	// left 97 65361
 	else if (button == 97 || button == 65361)
 	{
 		mlx->offset_x += (ft_abs(mlx->offset_x / mlx->scale) * -1);
 		fractal(mlx);
 	}
-	// right 100 65363
 	else if (button == 100 || button == 65363)
 	{
 		mlx->offset_x -= (ft_abs(mlx->offset_x / mlx->scale) * -1);
 		fractal(mlx);
 	}
-	else if(button == 65307)
+	else if (button == 65307)
 	{
 		exit(1);
 	}
@@ -88,6 +81,5 @@ int	key_event(int button, void *param)
 	printf("scale		: %f\n", mlx->scale);
 	printf("offset x	: %f\n", mlx->offset_x);
 	printf("offset y	: %f\n", mlx->offset_y);
-
 	return (1);
 }

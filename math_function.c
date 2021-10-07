@@ -2,7 +2,7 @@
 
 double	ft_abs(double n)
 {
-	if (n  < 0)
+	if (n < 0)
 		return (-n);
 	return (n);
 }

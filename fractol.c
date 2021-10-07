@@ -1,11 +1,9 @@
 #include "fractol.h"
 
-
 void	set_fractol(t_fractal *mlx, char **argv)
 {
 	printf("chamei a funcao\n");
-	// printf("aqui tem o: %d\n", argv[1][0] == 'j');
-	if (argv[1][0]== 'j' || argv[1][0]== 'J')
+	if (argv[1][0] == 'j' || argv[1][0] == 'J')
 	{
 		mlx->set = "j";
 		printf("entrei no julia\n");
@@ -19,22 +17,19 @@ void	set_fractol(t_fractal *mlx, char **argv)
 	{
 		mlx->set = "b";
 		printf("entrei no burn\n");
-
 	}
 }
 
 int	main(int argc, char **argv)
 {
-	(void)argc;
-	t_fractal		*mlx;
+	t_fractal	*mlx;
 	t_color		*color;
 
+	(void)argc;
 	mlx = (t_fractal *)malloc(sizeof(t_fractal) * 1);
 	set_default_fractal(mlx);
 	set_fractol(mlx, argv);
-
-
-	printf("argc: %i\n",argc);
+	printf("argc: %i\n", argc);
 	printf("argv[0]: %s\n", argv[0]);
 	printf("argv[1]: %s\n", argv[1]);
 	printf("argv[2]: %s\n", argv[2]);
@@ -42,10 +37,6 @@ int	main(int argc, char **argv)
 	printf("argv[4]: %s\n", argv[4]);
 	printf("set selection: %s\n", mlx->set);
 	printf("\n");
-
-
-
-
 	color = (t_color *)malloc(sizeof(t_color) * 1);
 	screen(mlx, color);
 	fractal(mlx);
