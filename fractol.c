@@ -6,7 +6,7 @@
 /*   By: demikael <pinheiromikael96@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 20:44:01 by demikael          #+#    #+#             */
-/*   Updated: 2021/12/11 22:23:02 by demikael         ###   ########.fr       */
+/*   Updated: 2021/12/11 22:50:54 by demikael         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@ void	set_fractol(t_fractal *mlx, char **argv)
 		mlx->set = "b";
 }
 
+void	warning(void)
+{
+	printf("PARAMETER ERROR \ntype 'M', 'J' or 'B' for mandelbroth \
+Julia or Burniship speculatively \nYou can enter the parameters for \
+Julia. Real / Imag such as: \n./pipex ./fractol j -0.8 0.156 \n");
+}
+
 int	main(int argc, char **argv)
 {
 	t_fractal	*mlx;
@@ -43,5 +50,8 @@ int	main(int argc, char **argv)
 		mlx_loop(mlx->init);
 	}
 	else
+	{
+		warning();
 		ft_correct_exit(mlx);
+	}
 }
