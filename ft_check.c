@@ -6,7 +6,7 @@
 /*   By: demikael <pinheiromikael96@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 22:15:43 by demikael          #+#    #+#             */
-/*   Updated: 2021/12/11 22:16:05 by demikael         ###   ########.fr       */
+/*   Updated: 2021/12/12 00:26:10 by demikael         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int	ft_verify_param(char **argv)
 	while (++count < 4)
 	{
 		i = 0;
-		param = argv[count];
 		count2 = 0;
+		param = argv[count];
 		if (param[count2] == '-' || param[count2] == '+')
 			count2++;
 		while (param[count2])

@@ -61,6 +61,10 @@ norm:
 r:				all
 				./$(NAME) j -0.8 0.156
 
+b:	all
+	./$(NAME) b
 
+m:	all
+	./$(NAME) m
 
-.PHONY:			all clean fclean re run norm
+.PHONY:	all clean fclean re run norm
