@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_atod.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: demikael <pinheiromikael96@gmail.com>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/11 20:45:49 by demikael          #+#    #+#             */
+/*   Updated: 2021/12/11 20:45:51 by demikael         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
 static int	reverse_point_position(const char *str)
@@ -37,15 +49,10 @@ double	ft_atod(const char *nptr)
 			signal = -1;
 		i++;
 	}
-	while (ft_isdigit(nptr[i]) || nptr[i] == '.' || nptr[i] == ',' )
+	while (ft_isdigit(nptr[i]) || nptr[i] == '.')
 	{
 		if (nptr[i] == '.')
 			i++;
-		else if (nptr[i] == ',')
-		{
-			write(1, "Error: comma in string\n", 23);
-			return (0);
-		}
 		number = (nptr[i] - 48) + (number * 10);
 		i++;
 	}

@@ -1,44 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   calc_img.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: demikael <pinheiromikael96@gmail.com>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/11 20:13:56 by demikael          #+#    #+#             */
+/*   Updated: 2021/12/11 20:38:55 by demikael         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
-
-void	fractal(t_fractal *mlx)
-{
-	int		x;
-	int		y;
-	int		color;
-
-	y = -1;
-	while (++y < IMG_HEIGHT)
-	{
-		x = -1;
-		while (++x < IMG_WIDTH)
-		{
-			if (mlx->set[0] == 'j')
-			{
-				mlx->z->im = map_to_im(y, mlx);
-				mlx->z->re = map_to_re(x, mlx);
-				mlx->c->re = -0.80;
-				mlx->c->im = 0.156;
-			}
-			else if (mlx->set[0] == 'm')
-			{
-				mlx->c->im = map_to_im(y, mlx);
-				mlx->c->re = map_to_re(x, mlx);
-				mlx->z->re = 0;
-				mlx->z->im = 0;
-			}
-			else if (mlx->set[0] == 'b')
-			{
-				mlx->c->im = map_to_im(y, mlx);
-				mlx->c->re = map_to_re(x, mlx);
-				mlx->z->re = 0;
-				mlx->z->im = 0;
-			}
-			color = mandelbrot_set(mlx);
-			set_color(x, y, mlx, color);
-		}
-	}
-	mlx_put_image_to_window(mlx->init, mlx->win, mlx->img, 0, 0);
-}
 
 double	map_to_re(int x, t_fractal *mlx)
 {
@@ -48,4 +20,26 @@ double	map_to_re(int x, t_fractal *mlx)
 double	map_to_im(int y, t_fractal *mlx)
 {
 	return (y / mlx->scale + mlx->offset_y);
+}
+
+void	init_j(int x, int y, t_fractal *mlx)
+{
+	mlx->z->im = map_to_im(y, mlx);
+	mlx->z->re = map_to_re(x, mlx);
+}
+
+void	init_m(int x, int y, t_fractal *mlx)
+{
+	mlx->c->im = map_to_im(y, mlx);
+	mlx->c->re = map_to_re(x, mlx);
+	mlx->z->re = 0;
+	mlx->z->im = 0;
+}
+
+void	init_b(int x, int y, t_fractal *mlx)
+{
+	mlx->c->im = map_to_im(y, mlx);
+	mlx->c->re = map_to_re(x, mlx);
+	mlx->z->re = 0;
+	mlx->z->im = 0;
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_deafault.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: demikael <pinheiromikael96@gmail.com>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/11 22:24:34 by demikael          #+#    #+#             */
+/*   Updated: 2021/12/11 22:24:34 by demikael         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
 void	set_default_fractal(t_fractal *mlx)
@@ -15,6 +27,7 @@ void	set_default_fractal(t_fractal *mlx)
 	mlx->offset_y = IMG_HEIGHT / 2 / mlx->scale * -1;
 	mlx->z = (t_complex *)malloc(sizeof(t_complex) * 1);
 	mlx->c = (t_complex *)malloc(sizeof(t_complex) * 1);
+	mlx->datas = (t_color *)malloc(sizeof(t_color) * 1);
 	generate_color(mlx);
 }
 
