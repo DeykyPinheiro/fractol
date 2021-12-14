@@ -6,25 +6,12 @@
 /*   By: demikael <pinheiromikael96@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 20:44:01 by demikael          #+#    #+#             */
-/*   Updated: 2021/12/14 00:18:34 by demikael         ###   ########.fr       */
+/*   Updated: 2021/12/14 01:04:29 by demikael         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	set_fractol(t_fractal *mlx, char **argv)
-{
-	if (argv[1][0] == 'j' || argv[1][0] == 'J')
-	{
-		mlx->set = "j";
-		mlx->c->re = ft_atod(argv[2]);
-		mlx->c->im = ft_atod(argv[3]);
-	}
-	else if (argv[1][0] == 'm' || argv[1][0] == 'M')
-		mlx->set = "m";
-	else if (argv[1][0] == 'b' || argv[1][0] == 'B')
-		mlx->set = "b";
-}
 
 void	warning(void)
 {
@@ -43,7 +30,12 @@ static void	rotine(t_fractal *mlx)
 
 static void	verify(int argc, char **argv, t_fractal *mlx)
 {
-	if (argc == 2)
+	if (argv[1][1])
+	{
+			warning();
+			ft_correct_exit(mlx);
+	}
+	else if (argc == 2)
 	{
 		if ((!(argv[1][0] == 'm' || argv[1][0] == 'M')) \
 		&& (!(argv[1][0] == 'b' || argv[1][0] == 'B')))
@@ -62,19 +54,36 @@ static void	verify(int argc, char **argv, t_fractal *mlx)
 	}
 }
 
+void	set_fractol(t_fractal *mlx, char **argv)
+{
+	if (argv[1][0] == 'j' || argv[1][0] == 'J')
+	{
+		mlx->set = "j";
+		mlx->c->re = ft_atod(argv[2]);
+		mlx->c->im = ft_atod(argv[3]);
+	}
+	else if (argv[1][0] == 'm' || argv[1][0] == 'M')
+		mlx->set = "m";
+	else if (argv[1][0] == 'b' || argv[1][0] == 'B')
+		mlx->set = "b";
+}
+
 int	main(int argc, char **argv)
 {
 	t_fractal	*mlx;
 
 	mlx = (t_fractal *)malloc(sizeof(t_fractal) * 1);
 	set_default_fractal(mlx);
+	verify(argc, argv, mlx);
 	set_fractol(mlx, argv);
 	screen(mlx, mlx->datas);
-	verify(argc, argv, mlx);
 	if (mlx->set[0] == 'j' && ft_verify_param(argv))
 		rotine(mlx);
 	else if (mlx->set[0] == 'b' || mlx->set[0] == 'm')
 		rotine(mlx);
 	else
+	{
+		warning();
 		ft_correct_exit(mlx);
+	}
 }
