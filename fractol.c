@@ -6,12 +6,11 @@
 /*   By: demikael <pinheiromikael96@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 20:44:01 by demikael          #+#    #+#             */
-/*   Updated: 2021/12/14 01:32:07 by demikael         ###   ########.fr       */
+/*   Updated: 2021/12/14 01:34:00 by demikael         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
-
 
 void	warning(void)
 {
@@ -20,13 +19,12 @@ Julia or Burniship spec.\nYou can enter parameters for \
 Julia. Real/Imag such as:\n./fractol j -0.8 0.156\n");
 }
 
-
 static void	verify(int argc, char **argv, t_fractal *mlx)
 {
 	if (argv[1][1])
 	{
-			warning();
-			ft_correct_exit(mlx);
+		warning();
+		ft_correct_exit(mlx);
 	}
 	else if (argc == 2)
 	{
@@ -68,6 +66,7 @@ static void	rotine(t_fractal *mlx)
 	mlx_mouse_hook(mlx->win, &mouse_event, mlx);
 	mlx_loop(mlx->init);
 }
+
 int	main(int argc, char **argv)
 {
 	t_fractal	*mlx;
