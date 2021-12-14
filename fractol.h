@@ -6,7 +6,7 @@
 /*   By: demikael <pinheiromikael96@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 22:25:34 by demikael          #+#    #+#             */
-/*   Updated: 2021/12/11 23:24:37 by demikael         ###   ########.fr       */
+/*   Updated: 2021/12/14 01:31:41 by demikael         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ typedef struct s_fractal
 double	ft_atod(const char *nptr);
 int		mouse_event(int button, int x, int y, void *param);
 int		key_event(int button, void *param);
-void	set_fractol(t_fractal *mlx, char **argv);
+void	set_fractol(t_fractal *mlx, char **argv, int argc);
 double	complex_abs(t_complex *z);
 void	set_default_fractal(t_fractal *mlx);
 void	screen(t_fractal *mlx, t_color *color);
