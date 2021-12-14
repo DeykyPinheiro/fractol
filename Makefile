@@ -28,7 +28,7 @@ ARFLAGS			= rcs
 all:			$(NAME)
 
 $(NAME):		$(LIBFT) $(MINILIBX) $(OBJECTS) $(HEADER)
-				$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(MINILIBX) $(MLXFLAGS) -o $(NAME)
+				$(CC) $(CFLAGS) -o3 $(OBJECTS) $(LIBFT) $(MINILIBX) $(MLXFLAGS) -o $(NAME)
 				$(AR) $(ARFLAGS) $(NAME) $(OBJECTS)
 
 
@@ -66,5 +66,8 @@ b:	all
 
 m:	all
 	./$(NAME) m
+
+v:
+	valgrind --leak-check=full ./fractol m
 
 .PHONY:	all clean fclean re run norm
