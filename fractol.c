@@ -6,7 +6,7 @@
 /*   By: demikael <pinheiromikael96@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 20:44:01 by demikael          #+#    #+#             */
-/*   Updated: 2021/12/13 23:52:14 by demikael         ###   ########.fr       */
+/*   Updated: 2021/12/14 00:18:34 by demikael         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,6 @@ static void	rotine(t_fractal *mlx)
 
 static void	verify(int argc, char **argv, t_fractal *mlx)
 {
-	if (argv[1][1])
-	{
-		warning();
-		ft_correct_exit(mlx);
-	}
 	if (argc == 2)
 	{
 		if ((!(argv[1][0] == 'm' || argv[1][0] == 'M')) \
